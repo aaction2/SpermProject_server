@@ -1,7 +1,24 @@
-% expermimental
+% nickkouk
+% The following module plots selectively some tracks of the spermatozoa.
+% It was used during the final presentation of the project.
+%
 % getting the graphs in a pretty fashion
 
-close all;
+% FLAGS
+cleanup = false;
+runSpermTracker = false;
+
+% CLEANUP ACTIONS
+if cleanup
+    clear all;
+    close all;
+    clc;
+end
+
+if runSpermTracker
+    % run spermTracker again.
+    [mat_overall, tracks] = spermTracker();
+end
 
 % general vars for plotting
 fontsize = 14;
@@ -76,7 +93,7 @@ title('Spermatozoa tracks','FontSize', fontsize+2);
 path_to_plots = ['..', filesep, '..', filesep, 'Presentation', filesep, ...
     'images', filesep, 'imageAnalysis', filesep];
 fprintf('Saving the plots...\n\t %s\n', path_to_plots);
-% .eps form (change it to .png if youwant to.
+% .eps form (change it to .png if you want to.)
 % print(gcf, '-depsc2',[path_to_plots, fig_name]);
 print(gcf, '-dpng',[path_to_plots, fig_name]);
 saveas(gcf, [path_to_plots, fig_name], 'fig');

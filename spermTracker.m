@@ -1,3 +1,6 @@
+% nickkouk - see the corresponding mathworks example 
+% http://www.mathworks.com/examples/matlab-computer-vision/mw/vision_product-multiObjectTracking-motion-based-multiple-object-tracking
+
 %% Motion-Based Multiple Object Tracking
 % This example shows how to perform automatic detection and motion-based
 % tracking of moving objects in a video from a stationary camera.

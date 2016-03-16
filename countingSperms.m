@@ -1,7 +1,52 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% NTUA, National Technical University of Athens                  %
+% School of Mechanical Engineering                               %
+% Nikolaos Koukis, January 2016                                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% DOCUMENTATION: 
+%     The current module computes the total number of sperms given a video of
+%     the sperm movement. In order for the module to run correctly user
+%     must have access to the sperm analysis data (not uploaded on the
+%     github repository). If the data is available user can access one of
+%     the captured videos by setting the times_obj, try_num variables
+%     accordingly.
+% 
+%     It was heavily based on the following mathworks example:
+%     http://www.mathworks.com/matlabcentral/fileexchange/45951--computer-vision-made-easy--demo-files/content/countingCars.m
+%
+% TODO:
+%     Morphological operations:
+%     Morphological operations are necessary to identify the spermatozoa in 
+%     the video frames and they definetely need to be rendered to match the
+%     shape of spermatozoa correctly. 
+%     They probably need to be tuned according to the magnification used. 
+%     see the following links for an introduction on some background: 
+%           https://en.wikipedia.org/wiki/Mathematical_morphology
+%           http://www.mathworks.com/help/images/ref/bwmorph.html
+%           http://www.mathworks.com/help/images/morphological-filtering.html
+%     Spermatozoa tracking:
+%     Sperm position/velocity tracking is implemented in spermTracker.m 
+%     The current developement team highly advices that the two modules be
+%     merged so that both sperm counting and tracking be implemented in a
+%     single module. The spermTracker.m module is implemented using nested
+%     functions.
+%
+% For more information/insight to the implementation details refer to
+%     - http://biotech-ntua.wikispaces.com/Project_20152016_Spermodiagram#
+%     - https://github.com/bergercookie/Sperm3000_server
+%
+% Maintainer: Nikolaos Koukis, nickkouk@gmail.com
+
 %% Initialization actions
-clear all;
-close all
-clc;
+cleanup = true;
+
+if cleanup
+    clear all;
+    close all;
+    clc;
+end
 
 %% Folder actions
 % CHANGE TO IMAGEANALYSIS FOLDER

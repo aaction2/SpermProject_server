@@ -23,7 +23,9 @@ initDirConts = dir(dirpath);
 initDirLength = length(initDirConts);
 initDirNames = {initDirConts.name};
 
-while condition()
+% Use call to the condition function
+% fun definition varies based on the arguement list
+while condition() 
     curDirConts = (dir(dirpath));
     curDirLength = length(curDirConts);
     
@@ -41,6 +43,7 @@ while condition()
         
     end
    
+    % wait before checking again..
     pause(waitBetweenChecks);
 end
 

@@ -1,6 +1,6 @@
 function [changed] = watchDogFile(filepath)
 % WATCHDOG_FILE watches over if a specific file has changed by checking
-% its timestamp. If it does it returns with code 1.
+% its timestamp. If it does, it returns with code 1.
 %
 % nickkouk 20150109
 

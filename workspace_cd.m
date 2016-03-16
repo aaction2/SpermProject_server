@@ -2,7 +2,6 @@ function workspace_cd(gen_path)
 % WORKSPACE_CD changes the current MATLAB folder to the specified 
 % Gives explanatory messages when the cd fails.
 
-
 try 
     curpath = pwd;
     if ~strcmp(curpath, gen_path(1:end-1))
