@@ -1,4 +1,4 @@
-function [calib,f]=data(times_obj)
+function [calib,f]=calibratoin_data(times_obj)
 
 if times_obj==10
     calib=0.461;

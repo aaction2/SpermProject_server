@@ -1,0 +1,12 @@
+Inputted Video: 
+	40x_1st.mp4
+Creating the videoPlayers...
+Creating the ForegrdoundDetector object...
+Implementing morphological operation to clean up foreground
+
+Counting completed successfully.
+Releasing the Players/Readers.
+
+Sperm analysis completed.
+Total number of sperms: 107 +- 6
+=====================================================================

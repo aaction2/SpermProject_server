@@ -19,9 +19,20 @@ else
 end
 gen_path = [home, filesep, db2img_path];
 workspace_cd(gen_path)
-        
+
+% where to write debugging/output
+% fid = 1;
+global fid
+t = num2str(timeInSecs());
+debugFilePath = ['.', filesep, 'results_out', filesep, 'pending', filesep];
+debugFile = ['results_', t, '.txt'];
+fid = fopen([debugFilePath, debugFile], 'w');
+
         
 % FLAGS
+% set them accordingly
+fVideoPlayer = true; % write to output video files?
+fVideoWriter = false; % play the videos?
 
 % VIDEO VARIABLES
 
@@ -45,17 +56,29 @@ video_name = [int2str(times_obj), 'x_', try_num, encoding];
 
 %%% MAIN ACTIONS
 
-%% Read Video
+%% Video Input - Output 
+
 msg = sprintf('Inputted Video: \n\t%s', video_name); print_msg(msg);
 videoReader = vision.VideoFileReader(video_name);
 
-%% Create Video Player
-msg = sprintf('Creating the videoPlayer...'); print_msg(msg);
+msg = sprintf('Creating the videoPlayers...'); print_msg(msg);
 videoPlayer = vision.VideoPlayer;
 fgPlayer = vision.VideoPlayer;
 
+if fVideoWriter
+    msg = sprintf('Creating the videoWriters...'); print_msg(msg);
+    videoWriter = vision.VideoFileWriter('output_video.avi', ...
+        'FrameRate', 15);
+    fgWriter = vision.VideoFileWriter('output_fg.avi', ...
+        'FrameRate', 15);
+    
+% compress the writers as well
+videoWriter.VideoCompressor = 'MJPEG Compressor';
+fgWriter.VideoCompressor = 'MJPEG Compressor';
+
+end
 %% Create Foreground Detector  (Background Subtraction)
-frames4learning = 60;
+frames4learning = 40;
 
 msg = sprintf('Creating the ForegrdoundDetector object...'); print_msg(msg);
 foregroundDetector = vision.ForegroundDetector('NumGaussians', 3, ...
@@ -95,9 +118,6 @@ title('Foreground');
 %% Perform morphology to clean up foreground 
 %  todo - render the morphological algorithm used.
 
-% initial algorithm
-% cleanForeground = imopen(foreground, strel('Disk',1));
-
 msg = sprintf('Implementing morphological operation to clean up foreground');
 print_msg(msg);
 
@@ -123,7 +143,7 @@ blobAnalysis = vision.BlobAnalysis('BoundingBoxOutputPort', true, ...
 
 %% Loop through video
 numSperms_list = zeros(1000); % initialize list for increased comp. speed
-frames2use = 20; % analyze frames2use frames in total
+frames2use = 10; % analyze frames2use frames in total
 analFrames = 1; % analysisFrames counter initialization
 
 msg = sprintf(['Counting sperms. This might take a few minutes...\n', ...
@@ -155,9 +175,17 @@ while  ~isDone(videoReader) && analFrames < frames2use
     % add to the list of numSperms
     numSperms_list(analFrames) = numSperms;
     
-    % Display output
-    step(videoPlayer, result);
-    step(fgPlayer,cleanForeground);
+    if fVideoPlayer
+        % Display output
+        step(videoPlayer, result);
+        step(fgPlayer,cleanForeground);
+    end
+    
+    if fVideoWriter
+        % write the rendered frame to the new video files
+        step(videoWriter, result);
+        step(fgWriter, cleanForeground);
+    end
     
     % counters update
     totFrames = totFrames + 1;
@@ -176,11 +204,19 @@ msg = sprintf('\nCounting completed successfully.'); print_msg(msg);
 
 %% release video reader and writer
 msg = sprintf('Releasing the Players/Readers.'); print_msg(msg);
-release(videoPlayer);
 release(videoReader);
-release(fgPlayer);
-delete(videoPlayer); % delete will cause the viewer to close
-delete(fgPlayer);
+
+if fVideoWriter
+    release(videoWriter);
+    release(fgWriter);
+end
+
+if fVideoPlayer
+    release(videoPlayer);
+    release(fgPlayer);
+    delete(videoPlayer); % delete will cause the viewer to close
+    delete(fgPlayer);
+end
 
 %% PostProcessing
 % remove trailing zeros
@@ -192,3 +228,9 @@ stdSperms = round(std(numSperms_list));
 msg = sprintf(['Sperm analysis completed.\n', ...
     'Total number of sperms: %d +- %d'], meanSperms, stdSperms);
 print_msg(msg, 'res');
+
+% close the file descriptor
+fclose(fid);
+% move the file to the ready directory
+dstPath = ['.', filesep, 'results_out', filesep, 'ready', filesep];
+movefile([debugFilePath, debugFile], dstPath);

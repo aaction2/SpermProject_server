@@ -1,4 +1,11 @@
 #!/usr/bin/env/python
+
+"""
+NTUA, National Technical University of Athens
+School of Mechanical Engineering
+nickkouk, January 2016
+"""
+
 import os
 import time
 
@@ -12,12 +19,11 @@ def watchDog(folder_path='.', timeout=None):
     SOURCE:
     http://timgolden.me.uk/python/win32_how_do_i/watch_directory_for_changes.html
 
-    TODO: Doesn't account for updated files (although you could get fancy with
-          os.stat) 
+    TODO: Doesn't account for *updated* files (although you could get fancy
+    with os.stat) 
     """
 
     sleep_time = 2 # seconds
- 
     before = dict([(f, None) for f in os.listdir(folder_path)])
     
     # set the while condition

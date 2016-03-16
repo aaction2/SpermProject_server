@@ -2,6 +2,13 @@
 
 # source: https://docs.python.org/2/library/socketserver.html
 
+"""
+Wed Mar 16 20:56:19 EET 2016, nickkouk
+
+This is an experimental file for testing whether the python server side is
+indeed working correctly. No real use in the communicatio with the Android.
+"""
+
 import socket
 import sys
 

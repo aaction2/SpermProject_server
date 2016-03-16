@@ -11,7 +11,7 @@ try
         cd(gen_path);
     else 
         % path is the same. print cur folder.
-        msg = sprintf('Current folder: \n\t%s', curpath); print_msg(msg);
+        msg = sprintf('Current folder: \n\t%s', curpath); fprintf(msg);
     end
 catch ME
     % if path is not found give appropriate message to user so that he can
@@ -20,9 +20,9 @@ catch ME
         % change of folder not successful. Do it manually
         msg = sprintf(['change of folder failed.\n', ...
             'Please change manually to the imageAnalysis subfolder of the project repository']);
-        print_msg(msg);
+        fprintf(msg);
     else
-        msg = sprintf('Unidentified error. Check the code.'); print_msg(msg);
+        msg = sprintf('Unidentified error. Check the code.'); fprintf(msg);
     end
         
 end

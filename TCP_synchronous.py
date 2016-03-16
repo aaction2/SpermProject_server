@@ -1,5 +1,38 @@
 #!/usr/bin/env python
 
+"""
+NTUA, National Technical University of Athens
+School of Mechanical Engineering
+nickkouk, January 2016
+
+This is the main module for the server-side communication. 
+The module was written and tested in OSX but it should run without any change
+in windows/linux machines as well.
+
+Dependencies:
+    - python 2.x
+
+Usage: 
+    - It first listens to a predefined Ip/port pair for connections
+    - After the connection has succeeded it receives a video. 
+    - Decodes the received file using base64 binary decoding
+    - Places the output mp4 file in a predefined directory (videos_in/ready/). 
+
+todo:
+    - Use the logging function for outputing debugging/information messages to
+      the user
+    - Implement an authentication procedure for verifying the identity of the
+      potential client
+    - Feeling adventurous? Rewrite it using classes for additional flexibility,
+      robustness
+
+For more information/insight to the server usage refer to
+    - http://biotech-ntua.wikispaces.com/Project_20152016_Spermodiagram#
+    - https://github.com/bergercookie/Sperm3000_server
+
+"""
+
+# IMPORTS
 import socket
 import sys
 import os
@@ -9,6 +42,12 @@ import shutil
 from base64 import binascii
 from watchDog import watchDog
 
+"""
+Implement a cross-language communication scheme for communication with matlab.
+Python writes to the videos_in/pending_data, videos_in/ready_data (use literal
+names as below) directories and reads from the results_out/ready_data,
+results_out/ready_data directories.
+"""
 # Cross-language communication through folders
 videos_in = 'videos_in'
 results_out = 'results_out'
@@ -32,7 +71,7 @@ num_connections = 5
 addr = socket.gethostname()
 
 
-print("Settign up the necessary folder structure")
+print("Setting up the necessary folder structure")
 # set up the folder structure if it doesn't exist
 list0folders = [fname for fname in os.listdir(os.curdir) if
                 os.path.isdir("".join([os.curdir, os.sep, fname]))]
@@ -69,7 +108,7 @@ while True:
 
     rec = sc.recv(CHUNK_SIZE) # just read some here.
     print("[SERVER] Received from Client, len = {}".format(len(rec)))
-    print("[SERVER]: Client said: {}".format(rec))
+    #print("[SERVER]: Client said: {}".format(rec))
     while (rec):
         f.write(rec)
         print("[SERVER] Written to file.")
@@ -101,16 +140,17 @@ while True:
     [changed, changelist] = watchDog(ready_results)
     # todo add flag if analysis was successful or not.
     print("[SERVER] Analysis finished")
-    # test for None just to make sure
-    if changelist:
-        files2send = changelist['added']
-        for a_file in files2send:
-            f_path = "".join(ready_results, os.sep, a_file)
-            print("[SERVER] Sending file to client:\n\t {}".format(f_path))
-            f = open(f_path)
-            conts = f.read()
-            sc.sendall(conts)
-            f.close()
+    print("[SERVER] Files changed: {}".format(changelist))
+    ## test for None just to make sure
+    #if changelist:
+        #files2send = changelist['added']
+        #for a_file in files2send:
+            #f_path = "".join(ready_results, os.sep, a_file)
+            #print("[SERVER] Sending file to client:\n\t {}".format(f_path))
+            #f = open(f_path)
+            #conts = f.read()
+            #sc.sendall(conts)
+            #f.close()
 
     sc.close()
     print("[SERVER] Closed connection with client.")

@@ -41,14 +41,14 @@
 % <matlab:helpview(fullfile(docroot,'toolbox','matlab','matlab_prog','matlab_prog.map'),'nested_functions') nested functions> 
 % below.
 
-%% TODO - OVER ALL
+%% TODO - OVERALL
 % centroid dims are in pixels
 % maybe graph for every spermo 
 
-function [mat_overall, tracks] = multiObjectTracking()
+function [mat_overall, tracks] = spermTracker()
 
 % flags4user
-frames2use = 20; % analyze frames2use frames in total
+frames2use = 100; % analyze frames2use frames in total
 
 % create system objects used for reading video, detecting moving objects,
 % and displaying the results
@@ -107,7 +107,7 @@ end
         % to the background.
         
         obj.detector = vision.ForegroundDetector('NumGaussians', 3, ...
-            'NumTrainingFrames', 40, 'MinimumBackgroundRatio', 0.7);
+            'NumTrainingFrames', 40, 'MinimumBackgroundRatio', 0.9);
         
         % Connected groups of foreground pixels are likely to correspond to moving
         % objects.  The blob analysis system object is used to find such groups
@@ -117,7 +117,7 @@ end
         % todo - change this.
         obj.blobAnalyser = vision.BlobAnalysis('BoundingBoxOutputPort', true, ...
             'AreaOutputPort', true, 'CentroidOutputPort', true, ...
-            'MinimumBlobArea', 400);
+            'MinimumBlobArea', 70);
     end
 
 %% Initialize Tracks
@@ -300,8 +300,7 @@ end
             tracks(trackIdx).totalVisibleCount = ...
                 tracks(trackIdx).totalVisibleCount + 1;
             tracks(trackIdx).consecutiveInvisibleCount = 0;
-            
-            % todo - check that this is the case with the detectionIdx, trackIdx
+           
             mat_overall(tot_i, :) = [trackIdx, nFrame, centroid];
             tot_i  = tot_i + 1;
         end

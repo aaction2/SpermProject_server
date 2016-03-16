@@ -1,20 +1,32 @@
-clear all
-close all
-clc
 
-[mat_overall, tracks] = multiObjectTrackingExp();
 
+% FLAGS
+cleanup = false;
+runSpermTracker = false;
+
+% CLEANUP ACTIONS
+if cleanup
+    clear all;
+    close all;
+    clc;
+end
+
+if runSpermTracker
+    % run spermTracker again.
+    [mat_overall, tracks] = spermTracker();
+end
 trackposition=sortrows(mat_overall,1);
-disp(trackposition);
+% disp(trackposition);
 
 %number of objects that have been detected
 k=size(trackposition);
 numObjects=trackposition(k(1), 1);
 
 %velocity of objects in pixels/frame
+% use 3 velocity categories and split the data into them.?
 trackvel=zeros(k(1),3);
 for i=1:k(1)-1
-    trackvel(i,1)=trackposition(i,1);
+    trackvel(i,1)=trackposition(i,1); % id
     if trackposition(i,1)==trackposition(i+1,1)
         trackvel(i,2)=(trackposition(i+1,3)-trackposition(i,3))/(trackposition(i+1,2)-trackposition(i,2));
         trackvel(i,3)=(trackposition(i+1,4)-trackposition(i,4))/(trackposition(i+1,2)-trackposition(i,2));
@@ -25,10 +37,10 @@ end
 % [!] user-set video-variables
 % build the video name
 times_obj = 40; % options: 10, 20, 40
-try_num = '1st'; % options: 1, 2
-encoding = '.mp4';
+% try_num = '1st'; % options: 1, 2
+% encoding = '.mp4';
 
-[calib,f]=data(times_obj);
+[calib,f] = calibration_data(times_obj);
 
 %velocity in micrometers/second
 mtrackvel=zeros(k(1),4);
@@ -78,7 +90,7 @@ actualcountableobjects=size(meanvelocity);
 
 object=1;       %for object 1
 if object<=numObjects
-    objectplot=zeros(k,3);
+    objectplot=zeros(k(1),3); %[x,y, undefined]
     i=1;
     j=1;
     while trackposition(i,1)<=object
@@ -90,9 +102,9 @@ if object<=numObjects
         i=i+1;
     end
 end
-object2=10;       %for object 1
+object2=10;       %for object 2
 if object2<=numObjects
-    objectplot2=zeros(k,3);
+    objectplot2=zeros(k(1),3);
     i=1;
     j=1;
     while trackposition(i,1)<=object2
@@ -105,6 +117,8 @@ if object2<=numObjects
     end
 end  
 
-plot(objectplot(:,1),objectplot(:,2),'*',objectplot2(:,1),objectplot2(:,2),'+')
+plot(objectplot(:,1),objectplot(:,2),'*');
+hold on;
+plot(objectplot2(:,1),objectplot2(:,2),'+');
 
 
