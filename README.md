@@ -1,5 +1,5 @@
-Sperm3000 - Server Side
-=======================
+SpermProject - Server Side
+==========================
 
 The repository consists of the server side communication modules as well as the
 image processing algorithms used to compute the specifications of a given sperm
@@ -31,6 +31,5 @@ coded in *MATLAB*. The steps followed can be summarised below:
     countingSperms.m and multipleObjectTracking.m modules for their corresponding
     implementations.
 
-For more information on the project that the algorithm is used in as well as for
-technical details on the processing algorithm visit the 
+For more information on the overall project, visit the 
 [project webpage](http://biotech-ntua.wikispaces.com/Project_20152016_Spermodiagram).
